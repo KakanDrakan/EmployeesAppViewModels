@@ -1,4 +1,5 @@
 ﻿using EmployeesApp.Web.Models;
+using EmployeesApp.Web.Views.Employees;
 
 namespace EmployeesApp.Web.Services
 {
@@ -50,5 +51,30 @@ namespace EmployeesApp.Web.Services
 
         public Employee GetById(int id) => employees
             .Single(e => e.Id == id);
+
+        public IndexVM[] GetAllIndexViewModels() => employees
+            .Select(e => new IndexVM()
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Email = e.Email,
+                ShowAsHighlighted = ShowAsHighlighted(e),
+            })
+            .ToArray();
+        public DetailsVM GetDetailsViewModel(int id)
+        {
+            var employee = GetById(id);
+            return new DetailsVM()
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Email = employee.Email,
+            };
+        }
+
+        public bool ShowAsHighlighted(Employee employee)
+        {
+            return employee.Email.StartsWith("admin");
+        }
     }
 }
